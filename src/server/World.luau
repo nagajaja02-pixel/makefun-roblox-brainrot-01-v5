@@ -81,7 +81,7 @@ local function buildBase(parent, index, pos)
 	makePart(base, "SideWallLeft", Vector3.new(1, 8, 28), Vector3.new(pos.X - 11.5, 4.5, pos.Z), accent, Enum.Material.Brick)
 	makePart(base, "SideWallRight", Vector3.new(1, 8, 28), Vector3.new(pos.X + 11.5, 4.5, pos.Z), accent, Enum.Material.Brick)
 	-- Flat roof slab overhanging the walls, in clean light grey.
-	makePart(base, "Roof", Vector3.new(26, 1, 30), Vector3.new(pos.X, 9, pos.Z), Color3.fromRGB(236, 239, 241), Enum.Material.SmoothPlastic)
+	makePart(base, "Roof", Vector3.new(26, 1, 30), Vector3.new(pos.X, 9, pos.Z), accent, Enum.Material.SmoothPlastic)
 	-- Bright trim band along the top of each wall.
 	makePart(base, "TrimBack", Vector3.new(24, 0.5, 1.2), Vector3.new(pos.X, 8.2, pos.Z + 13.5), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
 	makePart(base, "TrimLeft", Vector3.new(1.2, 0.5, 28), Vector3.new(pos.X - 11.5, 8.2, pos.Z), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
