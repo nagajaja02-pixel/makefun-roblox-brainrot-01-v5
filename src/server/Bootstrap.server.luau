@@ -13,6 +13,7 @@ local ConveyorService = require(script.Parent.ConveyorService)
 local BaseService = require(script.Parent.BaseService)
 local MoneyService = require(script.Parent.MoneyService)
 local StealService = require(script.Parent.StealService)
+local BatService = require(script.Parent.BatService)
 local ShieldService = require(script.Parent.ShieldService)
 local WaveService = require(script.Parent.WaveService)
 local MerchantService = require(script.Parent.MerchantService)
@@ -32,6 +33,7 @@ for _, name in ipairs({
 	"ChargeDenied",
 	"CharacterPlaced",
 	"CharacterRemoved",
+	"CarryInterrupted",
 	"SellRequested",
 	"ShieldChanged",
 	"WaveWarning",
@@ -86,6 +88,7 @@ ctx.services.ConveyorService = ConveyorService
 ctx.services.BaseService = BaseService
 ctx.services.MoneyService = MoneyService
 ctx.services.StealService = StealService
+ctx.services.BatService = BatService
 ctx.services.ShieldService = ShieldService
 ctx.services.WaveService = WaveService
 ctx.services.MerchantService = MerchantService
@@ -96,6 +99,7 @@ BaseService.init(ctx)
 MoneyService.init(ctx)
 ConveyorService.init(ctx)
 StealService.init(ctx)
+BatService.init(ctx)
 ShieldService.init(ctx)
 WaveService.init(ctx)
 MerchantService.init(ctx)
@@ -110,4 +114,4 @@ task.spawn(function()
 	end
 end)
 
-print("[Brainrot Blitz] server started: island built, 8 services running")
+print("[Brainrot Blitz] server started: island built, 9 services running")

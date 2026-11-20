@@ -228,6 +228,12 @@ function StealService.init(ctx)
 		-- The model was destroyed by the seller, so nothing to clean up
 		-- here; the placed map is cleared by the click handler.
 	end)
+
+	-- A bat hit interrupts a carry: the thief drops the brainrot and it
+	-- goes straight back to its owner's stand, so the raid fails.
+	events.CarryInterrupted.Event:Connect(function(player, _model)
+		stopCarrying(player, true)
+	end)
 end
 
 return StealService

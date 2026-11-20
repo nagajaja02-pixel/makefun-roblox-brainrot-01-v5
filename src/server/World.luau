@@ -55,6 +55,17 @@ local function makeBoard(parent, name, size, pos, title, lines)
 	return board, gui
 end
 
+-- One accent colour per safehouse so the six bases read as distinct
+-- buildings instead of identical grey boxes.
+local BASE_ACCENTS = {
+	Color3.fromRGB(198, 84, 70), -- brick red
+	Color3.fromRGB(66, 135, 200), -- harbour blue
+	Color3.fromRGB(76, 160, 96), -- leaf green
+	Color3.fromRGB(214, 158, 62), -- amber
+	Color3.fromRGB(146, 104, 196), -- violet
+	Color3.fromRGB(56, 158, 158), -- teal
+}
+
 -- One safehouse: platform, back and side walls, ten stand pads in two rows
 -- of five, a shield shell (invisible and non-solid until activated), and a
 -- sign board at the front. Returns the base record the services use.
@@ -62,10 +73,26 @@ local function buildBase(parent, index, pos)
 	local base = Instance.new("Model")
 	base.Name = "Base" .. tostring(index)
 	base.Parent = parent
-	makePart(base, "Platform", Vector3.new(24, 1, 28), Vector3.new(pos.X, 0.5, pos.Z), Color3.fromRGB(176, 190, 197))
-	makePart(base, "BackWall", Vector3.new(24, 8, 1), Vector3.new(pos.X, 4.5, pos.Z + 13.5), Color3.fromRGB(120, 144, 156))
-	makePart(base, "SideWallLeft", Vector3.new(1, 8, 28), Vector3.new(pos.X - 11.5, 4.5, pos.Z), Color3.fromRGB(120, 144, 156))
-	makePart(base, "SideWallRight", Vector3.new(1, 8, 28), Vector3.new(pos.X + 11.5, 4.5, pos.Z), Color3.fromRGB(120, 144, 156))
+	local accent = BASE_ACCENTS[((index - 1) % #BASE_ACCENTS) + 1]
+	-- Brick walls in the base accent colour and a concrete platform, so
+	-- the building reads as a real structure instead of flat plastic.
+	makePart(base, "Platform", Vector3.new(24, 1, 28), Vector3.new(pos.X, 0.5, pos.Z), Color3.fromRGB(158, 168, 175), Enum.Material.Concrete)
+	makePart(base, "BackWall", Vector3.new(24, 8, 1), Vector3.new(pos.X, 4.5, pos.Z + 13.5), accent, Enum.Material.Brick)
+	makePart(base, "SideWallLeft", Vector3.new(1, 8, 28), Vector3.new(pos.X - 11.5, 4.5, pos.Z), accent, Enum.Material.Brick)
+	makePart(base, "SideWallRight", Vector3.new(1, 8, 28), Vector3.new(pos.X + 11.5, 4.5, pos.Z), accent, Enum.Material.Brick)
+	-- Roof slab overhanging the walls, in dark wood planks.
+	makePart(base, "Roof", Vector3.new(26, 1, 30), Vector3.new(pos.X, 9, pos.Z), Color3.fromRGB(93, 64, 55), Enum.Material.WoodPlanks)
+	-- Bright trim band along the top of each wall.
+	makePart(base, "TrimBack", Vector3.new(24, 0.5, 1.2), Vector3.new(pos.X, 8.2, pos.Z + 13.5), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
+	makePart(base, "TrimLeft", Vector3.new(1.2, 0.5, 28), Vector3.new(pos.X - 11.5, 8.2, pos.Z), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
+	makePart(base, "TrimRight", Vector3.new(1.2, 0.5, 28), Vector3.new(pos.X + 11.5, 8.2, pos.Z), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
+	-- Windows on the back wall (facing into the base) and a wooden door.
+	makePart(base, "WindowLeft", Vector3.new(4, 3, 0.2), Vector3.new(pos.X - 6, 5.5, pos.Z + 12.85), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
+	makePart(base, "WindowRight", Vector3.new(4, 3, 0.2), Vector3.new(pos.X + 6, 5.5, pos.Z + 12.85), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
+	makePart(base, "Door", Vector3.new(4, 6, 0.3), Vector3.new(pos.X, 3.5, pos.Z + 12.8), Color3.fromRGB(93, 64, 55), Enum.Material.Wood)
+	-- A window on the outside of each side wall.
+	makePart(base, "WindowSideLeft", Vector3.new(0.2, 3, 4), Vector3.new(pos.X - 12.05, 5.5, pos.Z), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
+	makePart(base, "WindowSideRight", Vector3.new(0.2, 3, 4), Vector3.new(pos.X + 12.05, 5.5, pos.Z), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
 	-- Ten stand pads: two rows of five across the platform.
 	local pads = {}
 	for row = 0, 1 do
@@ -110,14 +137,17 @@ function World.build()
 
 	-- Sea around the island, so the harbour reads as a harbour.
 	makePart(folder, "Sea", Vector3.new(500, 1, 500), Vector3.new(0, -2.5, 0), Color3.fromRGB(2, 119, 189), Enum.Material.Water)
-	-- Island ground: sand base with a grass top.
-	makePart(folder, "SandBase", Vector3.new(268, 2, 200), Vector3.new(0, -1, 0), Color3.fromRGB(194, 178, 128))
-	makePart(folder, "GrassTop", Vector3.new(260, 0.4, 192), Vector3.new(0, -0.2, 0), Color3.fromRGB(102, 187, 106))
-	-- Boundary walls around the island.
-	makePart(folder, "WallNorth", Vector3.new(268, 6, 1), Vector3.new(0, 3, -99.5), Color3.fromRGB(176, 190, 197))
-	makePart(folder, "WallSouth", Vector3.new(268, 6, 1), Vector3.new(0, 3, 99.5), Color3.fromRGB(176, 190, 197))
-	makePart(folder, "WallWest", Vector3.new(1, 6, 200), Vector3.new(-133.5, 3, 0), Color3.fromRGB(176, 190, 197))
-	makePart(folder, "WallEast", Vector3.new(1, 6, 200), Vector3.new(133.5, 3, 0), Color3.fromRGB(176, 190, 197))
+	-- Island ground: sand base with a grass top, in textured materials.
+	makePart(folder, "SandBase", Vector3.new(268, 2, 200), Vector3.new(0, -1, 0), Color3.fromRGB(194, 178, 128), Enum.Material.Sand)
+	makePart(folder, "GrassTop", Vector3.new(260, 0.4, 192), Vector3.new(0, -0.2, 0), Color3.fromRGB(102, 187, 106), Enum.Material.Grass)
+	-- Boundary walls around the island, in concrete.
+	makePart(folder, "WallNorth", Vector3.new(268, 6, 1), Vector3.new(0, 3, -99.5), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
+	makePart(folder, "WallSouth", Vector3.new(268, 6, 1), Vector3.new(0, 3, 99.5), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
+	makePart(folder, "WallWest", Vector3.new(1, 6, 200), Vector3.new(-133.5, 3, 0), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
+	makePart(folder, "WallEast", Vector3.new(1, 6, 200), Vector3.new(133.5, 3, 0), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
+	-- Cobblestone footpaths flanking the conveyor, under the lamp posts.
+	makePart(folder, "PathNorth", Vector3.new(240, 0.2, 4), Vector3.new(0, 0.1, 8), Color3.fromRGB(188, 188, 178), Enum.Material.Cobblestone)
+	makePart(folder, "PathSouth", Vector3.new(240, 0.2, 4), Vector3.new(0, 0.1, -8), Color3.fromRGB(188, 188, 178), Enum.Material.Cobblestone)
 
 	-- Conveyor: long belt down the middle of the island, with side rails
 	-- and legs, running from X -131 to +131.
@@ -162,8 +192,8 @@ function World.build()
 
 	-- A small ship at the south dock, floating on the sea.
 	makePart(folder, "ShipHull", Vector3.new(22, 4, 9), Vector3.new(40, -0.5, -108), Color3.fromRGB(121, 85, 72), Enum.Material.Wood)
-	makePart(folder, "ShipCabin", Vector3.new(8, 5, 7), Vector3.new(36, 4, -108), Color3.fromRGB(255, 255, 255))
-	makePart(folder, "ShipMast", Vector3.new(0.8, 14, 0.8), Vector3.new(44, 8, -108), Color3.fromRGB(93, 64, 55))
+	makePart(folder, "ShipCabin", Vector3.new(8, 5, 7), Vector3.new(36, 4, -108), Color3.fromRGB(240, 230, 210), Enum.Material.WoodPlanks)
+	makePart(folder, "ShipMast", Vector3.new(0.8, 14, 0.8), Vector3.new(44, 8, -108), Color3.fromRGB(93, 64, 55), Enum.Material.Wood)
 	makePart(folder, "ShipFlag", Vector3.new(4, 2, 0.2), Vector3.new(46, 14, -108), Color3.fromRGB(239, 83, 80))
 
 	-- Observation deck in the north-east corner: a raised platform with steps.
@@ -182,7 +212,7 @@ function World.build()
 	-- A few palm trees for harbour flavour.
 	for _, spot in ipairs({ Vector3.new(-60, 0, 70), Vector3.new(60, 0, -70), Vector3.new(-120, 0, 40), Vector3.new(120, 0, -40) }) do
 		makePart(folder, "PalmTrunk", Vector3.new(1.2, 9, 1.2), Vector3.new(spot.X, 4.5, spot.Z), Color3.fromRGB(121, 85, 72), Enum.Material.Wood, Enum.PartType.Cylinder)
-		makePart(folder, "PalmTop", Vector3.new(5, 2.5, 5), Vector3.new(spot.X, 9.5, spot.Z), Color3.fromRGB(46, 125, 50), Enum.PartType.Ball)
+		makePart(folder, "PalmTop", Vector3.new(5, 2.5, 5), Vector3.new(spot.X, 9.5, spot.Z), Color3.fromRGB(46, 125, 50), Enum.Material.Grass, Enum.PartType.Ball)
 	end
 
 	-- Lamp posts along the conveyor for a bright, readable island.
