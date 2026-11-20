@@ -4,7 +4,7 @@
 -- safehouse stands both ask this module for models, so the same character
 -- always looks the same wherever it appears.
 
-local BrainrotData = require(script.Parent.BrainrotData)
+local BrainrotData = require(game:GetService("ReplicatedStorage").Shared.BrainrotData)
 
 local BrainrotModels = {}
 
