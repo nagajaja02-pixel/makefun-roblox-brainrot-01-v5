@@ -58,12 +58,12 @@ end
 -- One accent colour per safehouse so the six bases read as distinct
 -- buildings instead of identical grey boxes.
 local BASE_ACCENTS = {
-	Color3.fromRGB(198, 84, 70), -- brick red
-	Color3.fromRGB(66, 135, 200), -- harbour blue
-	Color3.fromRGB(76, 160, 96), -- leaf green
-	Color3.fromRGB(214, 158, 62), -- amber
-	Color3.fromRGB(146, 104, 196), -- violet
-	Color3.fromRGB(56, 158, 158), -- teal
+	Color3.fromRGB(244, 67, 54), -- bright red
+	Color3.fromRGB(33, 150, 243), -- bright blue
+	Color3.fromRGB(76, 175, 80), -- bright green
+	Color3.fromRGB(255, 193, 7), -- bright yellow
+	Color3.fromRGB(156, 39, 176), -- bright purple
+	Color3.fromRGB(0, 188, 212), -- bright teal
 }
 
 -- One safehouse: platform, back and side walls, ten stand pads in two rows
@@ -76,23 +76,23 @@ local function buildBase(parent, index, pos)
 	local accent = BASE_ACCENTS[((index - 1) % #BASE_ACCENTS) + 1]
 	-- Brick walls in the base accent colour and a concrete platform, so
 	-- the building reads as a real structure instead of flat plastic.
-	makePart(base, "Platform", Vector3.new(24, 1, 28), Vector3.new(pos.X, 0.5, pos.Z), Color3.fromRGB(158, 168, 175), Enum.Material.Concrete)
+	makePart(base, "Platform", Vector3.new(24, 1, 28), Vector3.new(pos.X, 0.5, pos.Z), Color3.fromRGB(224, 228, 232), Enum.Material.Concrete)
 	makePart(base, "BackWall", Vector3.new(24, 8, 1), Vector3.new(pos.X, 4.5, pos.Z + 13.5), accent, Enum.Material.Brick)
 	makePart(base, "SideWallLeft", Vector3.new(1, 8, 28), Vector3.new(pos.X - 11.5, 4.5, pos.Z), accent, Enum.Material.Brick)
 	makePart(base, "SideWallRight", Vector3.new(1, 8, 28), Vector3.new(pos.X + 11.5, 4.5, pos.Z), accent, Enum.Material.Brick)
-	-- Roof slab overhanging the walls, in dark wood planks.
-	makePart(base, "Roof", Vector3.new(26, 1, 30), Vector3.new(pos.X, 9, pos.Z), Color3.fromRGB(93, 64, 55), Enum.Material.WoodPlanks)
+	-- Flat roof slab overhanging the walls, in clean light grey.
+	makePart(base, "Roof", Vector3.new(26, 1, 30), Vector3.new(pos.X, 9, pos.Z), Color3.fromRGB(236, 239, 241), Enum.Material.SmoothPlastic)
 	-- Bright trim band along the top of each wall.
 	makePart(base, "TrimBack", Vector3.new(24, 0.5, 1.2), Vector3.new(pos.X, 8.2, pos.Z + 13.5), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
 	makePart(base, "TrimLeft", Vector3.new(1.2, 0.5, 28), Vector3.new(pos.X - 11.5, 8.2, pos.Z), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
 	makePart(base, "TrimRight", Vector3.new(1.2, 0.5, 28), Vector3.new(pos.X + 11.5, 8.2, pos.Z), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
-	-- Windows on the back wall (facing into the base) and a wooden door.
-	makePart(base, "WindowLeft", Vector3.new(4, 3, 0.2), Vector3.new(pos.X - 6, 5.5, pos.Z + 12.85), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
-	makePart(base, "WindowRight", Vector3.new(4, 3, 0.2), Vector3.new(pos.X + 6, 5.5, pos.Z + 12.85), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
-	makePart(base, "Door", Vector3.new(4, 6, 0.3), Vector3.new(pos.X, 3.5, pos.Z + 12.8), Color3.fromRGB(93, 64, 55), Enum.Material.Wood)
+	-- Light-blue glass windows on the back wall and a light wooden door.
+	makePart(base, "WindowLeft", Vector3.new(4, 3, 0.2), Vector3.new(pos.X - 6, 5.5, pos.Z + 12.85), Color3.fromRGB(135, 206, 235), Enum.Material.Glass)
+	makePart(base, "WindowRight", Vector3.new(4, 3, 0.2), Vector3.new(pos.X + 6, 5.5, pos.Z + 12.85), Color3.fromRGB(135, 206, 235), Enum.Material.Glass)
+	makePart(base, "Door", Vector3.new(4, 6, 0.3), Vector3.new(pos.X, 3.5, pos.Z + 12.8), Color3.fromRGB(176, 141, 87), Enum.Material.Wood)
 	-- A window on the outside of each side wall.
-	makePart(base, "WindowSideLeft", Vector3.new(0.2, 3, 4), Vector3.new(pos.X - 12.05, 5.5, pos.Z), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
-	makePart(base, "WindowSideRight", Vector3.new(0.2, 3, 4), Vector3.new(pos.X + 12.05, 5.5, pos.Z), Color3.fromRGB(24, 42, 66), Enum.Material.Glass)
+	makePart(base, "WindowSideLeft", Vector3.new(0.2, 3, 4), Vector3.new(pos.X - 12.05, 5.5, pos.Z), Color3.fromRGB(135, 206, 235), Enum.Material.Glass)
+	makePart(base, "WindowSideRight", Vector3.new(0.2, 3, 4), Vector3.new(pos.X + 12.05, 5.5, pos.Z), Color3.fromRGB(135, 206, 235), Enum.Material.Glass)
 	-- Ten stand pads: two rows of five across the platform.
 	local pads = {}
 	for row = 0, 1 do
@@ -135,30 +135,38 @@ function World.build()
 	folder.Name = "BrainrotWorld"
 	folder.Parent = workspace
 
-	-- Sea around the island, so the harbour reads as a harbour.
-	makePart(folder, "Sea", Vector3.new(500, 1, 500), Vector3.new(0, -2.5, 0), Color3.fromRGB(2, 119, 189), Enum.Material.Water)
-	-- Island ground: sand base with a grass top, in textured materials.
+	-- Sea around the island, bright cyan-blue so the harbour reads as a harbour.
+	makePart(folder, "Sea", Vector3.new(500, 1, 500), Vector3.new(0, -2.5, 0), Color3.fromRGB(0, 176, 222), Enum.Material.Water)
+	-- Island ground: one uniform bright-grass top layer sitting clearly
+	-- above the sand base (grass top Y 0.05 vs sand top Y 0), so the whole
+	-- top reads as pure grass with no flicker; the sand only shows as a
+	-- beach rim around the edge.
 	makePart(folder, "SandBase", Vector3.new(268, 2, 200), Vector3.new(0, -1, 0), Color3.fromRGB(194, 178, 128), Enum.Material.Sand)
-	makePart(folder, "GrassTop", Vector3.new(260, 0.4, 192), Vector3.new(0, -0.2, 0), Color3.fromRGB(102, 187, 106), Enum.Material.Grass)
-	-- Boundary walls around the island, in concrete.
-	makePart(folder, "WallNorth", Vector3.new(268, 6, 1), Vector3.new(0, 3, -99.5), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
-	makePart(folder, "WallSouth", Vector3.new(268, 6, 1), Vector3.new(0, 3, 99.5), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
-	makePart(folder, "WallWest", Vector3.new(1, 6, 200), Vector3.new(-133.5, 3, 0), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
-	makePart(folder, "WallEast", Vector3.new(1, 6, 200), Vector3.new(133.5, 3, 0), Color3.fromRGB(176, 190, 197), Enum.Material.Concrete)
-	-- Cobblestone footpaths flanking the conveyor, under the lamp posts.
-	makePart(folder, "PathNorth", Vector3.new(240, 0.2, 4), Vector3.new(0, 0.1, 8), Color3.fromRGB(188, 188, 178), Enum.Material.Cobblestone)
-	makePart(folder, "PathSouth", Vector3.new(240, 0.2, 4), Vector3.new(0, 0.1, -8), Color3.fromRGB(188, 188, 178), Enum.Material.Cobblestone)
+	makePart(folder, "GrassTop", Vector3.new(260, 0.4, 192), Vector3.new(0, -0.15, 0), Color3.fromRGB(88, 205, 100), Enum.Material.Grass)
+	-- Boundary walls around the island, in warm tan brick.
+	makePart(folder, "WallNorth", Vector3.new(268, 6, 1), Vector3.new(0, 3, -99.5), Color3.fromRGB(201, 170, 125), Enum.Material.Brick)
+	makePart(folder, "WallSouth", Vector3.new(268, 6, 1), Vector3.new(0, 3, 99.5), Color3.fromRGB(201, 170, 125), Enum.Material.Brick)
+	makePart(folder, "WallWest", Vector3.new(1, 6, 200), Vector3.new(-133.5, 3, 0), Color3.fromRGB(201, 170, 125), Enum.Material.Brick)
+	makePart(folder, "WallEast", Vector3.new(1, 6, 200), Vector3.new(133.5, 3, 0), Color3.fromRGB(201, 170, 125), Enum.Material.Brick)
+	-- Bright footpaths flanking the conveyor, under the lamp posts.
+	makePart(folder, "PathNorth", Vector3.new(240, 0.2, 4), Vector3.new(0, 0.1, 8), Color3.fromRGB(238, 228, 196), Enum.Material.Cobblestone)
+	makePart(folder, "PathSouth", Vector3.new(240, 0.2, 4), Vector3.new(0, 0.1, -8), Color3.fromRGB(238, 228, 196), Enum.Material.Cobblestone)
 
-	-- Conveyor: long belt down the middle of the island, with side rails
-	-- and legs, running from X -131 to +131.
-	makePart(folder, "Belt", Vector3.new(262, 1, 6), Vector3.new(0, 0.5, 0), Color3.fromRGB(55, 71, 79), Enum.Material.Metal)
+	-- Conveyor: a long, wide, near-black belt down the middle of the
+	-- island, with bright yellow side rails and glowing lane markings,
+	-- running from X -131 to +131. The dark belt against the bright
+	-- grass makes it the easiest thing to spot on the island.
+	makePart(folder, "Belt", Vector3.new(262, 1, 6), Vector3.new(0, 0.5, 0), Color3.fromRGB(28, 30, 33), Enum.Material.Metal)
 	makePart(folder, "RailLeft", Vector3.new(262, 0.6, 0.5), Vector3.new(0, 1.1, -3.2), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
 	makePart(folder, "RailRight", Vector3.new(262, 0.6, 0.5), Vector3.new(0, 1.1, 3.2), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
+	-- Bright lane markings down the middle of the dark belt.
+	makePart(folder, "BeltMarkLeft", Vector3.new(258, 0.1, 0.4), Vector3.new(0, 1.08, -2), Color3.fromRGB(255, 235, 59), Enum.Material.Neon)
+	makePart(folder, "BeltMarkRight", Vector3.new(258, 0.1, 0.4), Vector3.new(0, 1.08, 2), Color3.fromRGB(255, 235, 59), Enum.Material.Neon)
 	for x = -120, 120, 30 do
-		makePart(folder, "BeltLeg", Vector3.new(1, 1, 5), Vector3.new(x, 0.5, 0), Color3.fromRGB(84, 110, 122), Enum.Material.Metal)
+		makePart(folder, "BeltLeg", Vector3.new(1, 1, 5), Vector3.new(x, 0.5, 0), Color3.fromRGB(55, 65, 72), Enum.Material.Metal)
 	end
-	makePart(folder, "RollerWest", Vector3.new(1, 2, 6), Vector3.new(-131, 1, 0), Color3.fromRGB(120, 144, 156), Enum.Material.Metal, Enum.PartType.Cylinder)
-	makePart(folder, "RollerEast", Vector3.new(1, 2, 6), Vector3.new(131, 1, 0), Color3.fromRGB(120, 144, 156), Enum.Material.Metal, Enum.PartType.Cylinder)
+	makePart(folder, "RollerWest", Vector3.new(1, 2, 6), Vector3.new(-131, 1, 0), Color3.fromRGB(70, 85, 95), Enum.Material.Metal, Enum.PartType.Cylinder)
+	makePart(folder, "RollerEast", Vector3.new(1, 2, 6), Vector3.new(131, 1, 0), Color3.fromRGB(70, 85, 95), Enum.Material.Metal, Enum.PartType.Cylinder)
 
 	-- Six safehouses at the positions BrainrotData defines.
 	local bases = {}
@@ -167,8 +175,8 @@ function World.build()
 	end
 
 	-- Harbour crane near the west dock: tower, jib, and a hanging hook.
-	makePart(folder, "CraneTower", Vector3.new(4, 26, 4), Vector3.new(-110, 13, -70), Color3.fromRGB(255, 152, 0), Enum.Material.Metal)
-	makePart(folder, "CraneJib", Vector3.new(26, 2, 2), Vector3.new(-98, 25, -70), Color3.fromRGB(255, 152, 0), Enum.Material.Metal)
+	makePart(folder, "CraneTower", Vector3.new(4, 26, 4), Vector3.new(-110, 13, -70), Color3.fromRGB(255, 214, 0), Enum.Material.Metal)
+	makePart(folder, "CraneJib", Vector3.new(26, 2, 2), Vector3.new(-98, 25, -70), Color3.fromRGB(255, 214, 0), Enum.Material.Metal)
 	makePart(folder, "CraneCable", Vector3.new(0.3, 8, 0.3), Vector3.new(-88, 21, -70), Color3.fromRGB(38, 50, 56))
 	makePart(folder, "CraneHook", Vector3.new(3, 2, 3), Vector3.new(-88, 16.5, -70), Color3.fromRGB(255, 213, 79), Enum.Material.Metal)
 
