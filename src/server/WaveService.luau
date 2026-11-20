@@ -55,28 +55,63 @@ function WaveService.init(ctx)
 		end
 	end
 
+	-- One wave may run at a time. The flag is declared before runWave
+	-- so the function captures this local (not a global).
+	local waveRunning = false
+
+	-- The wave body: warning, then the sweep, then the wall parks off the
+	-- island again. Assumes the wave slot is already claimed; clears it
+	-- at the end so the next wave may start.
+	local function runWave()
+		-- Warning: fourteen seconds to get to high ground.
+		events.WaveWarning:Fire(BrainrotData.Wave.warning)
+		remotes.WaveWarning:FireAllClients(BrainrotData.Wave.warning)
+		task.wait(BrainrotData.Wave.warning)
+		-- Sweep: eight seconds, the wall crosses the island west to east.
+		events.WaveSweep:Fire()
+		remotes.WaveSweep:FireAllClients()
+		local steps = 16
+		local stepTime = BrainrotData.Wave.sweep / steps
+		for i = 0, steps do
+			local x = -140 + (280 * i / steps)
+			wall.Position = Vector3.new(x, 11, 0)
+			for _, player in ipairs(Players:GetPlayers()) do
+				sweepPlayer(player, x)
+			end
+			task.wait(stepTime)
+		end
+		wall.Position = Vector3.new(-200, 11, 0)
+		waveRunning = false
+	end
+
+	-- Claim the wave slot; returns false when a wave is already running,
+	-- so two waves can never run at once.
+	local function claimWave()
+		if waveRunning then
+			return false
+		end
+		waveRunning = true
+		return true
+	end
+
+	-- Public trigger so the admin service can start a wave on demand.
+	-- Returns false when a wave is already running.
+	WaveService.triggerWave = function()
+		if not claimWave() then
+			return false
+		end
+		task.spawn(runWave)
+		return true
+	end
+
+	-- Scheduled waves: the first one 52 seconds after the server starts,
+	-- then fifty-four seconds of calm after each wave before the next.
 	task.spawn(function()
 		task.wait(BrainrotData.Wave.firstAt)
 		while true do
-			-- Warning: fourteen seconds to get to high ground.
-			events.WaveWarning:Fire(BrainrotData.Wave.warning)
-			remotes.WaveWarning:FireAllClients(BrainrotData.Wave.warning)
-			task.wait(BrainrotData.Wave.warning)
-			-- Sweep: eight seconds, the wall crosses the island west to east.
-			events.WaveSweep:Fire()
-			remotes.WaveSweep:FireAllClients()
-			local steps = 16
-			local stepTime = BrainrotData.Wave.sweep / steps
-			for i = 0, steps do
-				local x = -140 + (280 * i / steps)
-				wall.Position = Vector3.new(x, 11, 0)
-				for _, player in ipairs(Players:GetPlayers()) do
-					sweepPlayer(player, x)
-				end
-				task.wait(stepTime)
+			if claimWave() then
+				runWave()
 			end
-			wall.Position = Vector3.new(-200, 11, 0)
-			-- Then fifty-four seconds of calm before the next wave.
 			task.wait(BrainrotData.Wave.interval)
 		end
 	end)

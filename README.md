@@ -17,6 +17,7 @@ The aerial thumbnail is live and approved on Roblox.
 - **Safehouses**: six bases around the island, each with stands for your brainrots. Start with 4 stands, upgrade up to 10.
 - **Steal**: grab a brainrot off someone else's stand and carry it home. A shield blocks raids for 26 seconds, then needs a 48-second cooldown.
 - **Baseball Bat**: every player spawns with a free wooden bat. Swing it at a raider to knock them back — if they are carrying a stolen brainrot, the hit makes them drop it and the raid fails.
+- **Admin commands**: the owner (or anyone testing in Roblox Studio) can type `/golden` to spawn a Golden Brainrot at once, `/tsunami` to trigger a tsunami at once, or `/help` for the list. An admin event turns the sky golden (for `/golden`) or storm-dark (for `/tsunami`) and shows an "ADMIN EVENT" banner to every player.
 - **Tsunami**: a wave sweeps the island on a schedule. Climb onto a base roof or the lookout deck to stay dry.
 - **Mutations**: rare Gold (2x income), Diamond (3x income) and Rainbow (5x income) spawns.
 - **Golden Brainrot event**: every few minutes a rare golden character appears on the conveyor, worth five times a normal character of its tier.

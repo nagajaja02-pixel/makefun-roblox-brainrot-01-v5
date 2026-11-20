@@ -17,6 +17,7 @@ local BatService = require(script.Parent.BatService)
 local ShieldService = require(script.Parent.ShieldService)
 local WaveService = require(script.Parent.WaveService)
 local MerchantService = require(script.Parent.MerchantService)
+local AdminService = require(script.Parent.AdminService)
 
 -- Server bus: BindableEvents the services use to talk to each other.
 local busFolder = Instance.new("Folder")
@@ -92,6 +93,7 @@ ctx.services.BatService = BatService
 ctx.services.ShieldService = ShieldService
 ctx.services.WaveService = WaveService
 ctx.services.MerchantService = MerchantService
+ctx.services.AdminService = AdminService
 
 -- Start the services. BaseService first (it owns the safehouses the other
 -- services place things into), then the economy, then the rest.
@@ -103,6 +105,7 @@ BatService.init(ctx)
 ShieldService.init(ctx)
 WaveService.init(ctx)
 MerchantService.init(ctx)
+AdminService.init(ctx)
 
 -- Heartbeat: a light status line every minute, so the server log shows the
 -- game is alive and how many players are in.

@@ -65,6 +65,12 @@ function ConveyorService.init(ctx)
 		return record
 	end
 
+	-- Public trigger so the admin service can spawn a golden on demand.
+	-- The scheduled golden loop below keeps using spawnOne directly.
+	ConveyorService.spawnGolden = function()
+		spawnOne(true)
+	end
+
 	-- A single movement loop drives every item on the belt, so the belt
 	-- never needs one thread per character.
 	task.spawn(function()
